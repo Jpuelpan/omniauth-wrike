@@ -21,7 +21,9 @@ end
 
 To get your Wrike client ID and Secret, you must [request them here](https://developers.wrike.com/getting-started/).
 
-[Wrike API 3.0 Documentation](https://developers.wrike.com/documentation/api/overview)
+[Wrike API 3.0 Documentation](https://developers.wrike.com/documentation-v3/api/overview)
+[Wrike API 4.0 Documentation](https://developers.wrike.com/documentation/api/overview)
+[Wrike migration from API v3 to API v4 Documentation](https://developers.wrike.com/documentation/api/migrations)
 
 ## TODO
 
@@ -30,4 +32,3 @@ To get your Wrike client ID and Secret, you must [request them here](https://dev
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/Jpuelpan/omniauth-wrike
-

@@ -6,37 +6,37 @@ module OmniAuth
       option :name, 'wrike'
 
       option :client_options, {
-        :site => 'https://www.wrike.com/api/v3',
-        :authorize_url => 'https://www.wrike.com/oauth2/authorize',
-        :token_url => 'https://www.wrike.com/oauth2/token'
+        site: 'https://www.wrike.com/api/v4',
+        authorize_url: 'https://www.wrike.com/oauth2/authorize/v4',
+        token_url: 'https://www.wrike.com/oauth2/token'
       }
 
       uid { raw_info['id'] }
 
       info do
         {
-          'uid' => raw_info['id'],
-          'name' => raw_info['name']
+          uid: raw_info['id'],
+          name: "#{raw_info['firstName']} #{raw_info['lastName']}",
+          email: user_email
         }
       end
 
       extra do
-        { 
-          'raw_info' => raw_info,
-          'accounts' => accounts
+        {
+          raw_info: raw_info
         }
       end
 
+      def user_email
+        raw_info['profiles'].first['email']
+      end
+
+      def user_data_url
+        @url ||= URI::HTTPS.build(host: access_token.params['host'], path: '/api/v4/contacts', query: 'me=true').to_s
+      end
+
       def raw_info
-        @raw_info ||= first_account
-      end
-
-      def accounts
-        @accounts ||= access_token.get('accounts').parsed['data']
-      end
-
-      def first_account
-        @first_account ||= accounts.first
+        @raw_info ||= access_token.get(user_data_url).parsed['data'].first
       end
     end
   end
