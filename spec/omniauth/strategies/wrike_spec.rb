@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe OmniAuth::Strategies::Wrike do
   let(:request) { double('Request', params: {}, cookies: {}, env: {}) }
-  let(:access_token) { double('access_token', params: { 'host' => 'www.wrike.com' }) }
   let(:profile) { raw_info_hash['profiles'].first }
-  let(:user_id) { [account_info_hash['id'], raw_info_hash['id']].join(':') }
 
   subject do
     args = ['appid', 'secret', @options || {}].compact
@@ -25,23 +23,13 @@ describe OmniAuth::Strategies::Wrike do
     end
 
     it 'has correct authorize url' do
-      expect(subject.options.client_options.authorize_url).to eq('https://login.wrike.com/oauth2/authorize/v4')
+      expect(subject.options.client_options.authorize_url).to eq('https://www.wrike.com/oauth2/authorize/v4')
     end
   end
 
   describe 'info' do
     before do
       allow(subject).to receive(:raw_info).and_return(raw_info_hash)
-      allow(subject).to receive(:account_info).and_return(account_info_hash)
-      allow(subject).to receive(:access_token).and_return(access_token)
-    end
-
-    it 'has correct user data url' do
-      expect(subject.user_data_url).to eq('https://www.wrike.com/api/v4/contacts?me=true')
-    end
-
-    it 'has correct account data url' do
-      expect(subject.user_account_url).to eq('https://www.wrike.com/api/v4/account')
     end
 
     it 'contains strict list of attrs' do
@@ -49,7 +37,7 @@ describe OmniAuth::Strategies::Wrike do
     end
 
     it 'returns the uid' do
-      expect(subject.info[:uid]).to eq(user_id)
+      expect(subject.info[:uid]).to eq(raw_info_hash['id'])
     end
 
     it 'returns the name' do
@@ -100,31 +88,24 @@ private
 
 def raw_info_hash
   {
-    'id' => 'KUAJ25LC',
-    'firstName' => 'Test',
-    'lastName' => 'User',
-    'type' => 'Person',
-    'profiles' => [
+    "id" => "KUAJ25LC",
+    "firstName" => "Test",
+    "lastName" => "User",
+    "type" => "Person",
+    "profiles" => [
       {
-        'accountId' => 'IEAGIITR',
-        'email' => 'test.user@myapp.com',
-        'role' => 'User',
-        'external' => false,
-        'admin' => false,
-        'owner' => true
+        "accountId" => "IEAGIITR",
+        "email" => "test.user@myapp.com",
+        "role" => "User",
+        "external" => false,
+        "admin" => false,
+        "owner" => true
       }
     ],
-    'avatarUrl' => 'https://www.wrike.com/avatars//7E/A2/Box_ffdf2a2e_84-84_v1.png',
-    'timezone' => 'Europe/Moscow',
-    'locale' => 'en',
-    'deleted' => false,
-    'me' => true
-  }
-end
-
-def account_info_hash
-  {
-    'id' => 'IEAAAAX3',
-    'name' => 'Test User’s Team'
+    "avatarUrl" => "https://www.wrike.com/avatars//7E/A2/Box_ffdf2a2e_84-84_v1.png",
+    "timezone" => "Europe/Moscow",
+    "locale" => "en",
+    "deleted" => false,
+    "me" => true
   }
 end
